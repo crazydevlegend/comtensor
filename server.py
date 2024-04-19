@@ -15,6 +15,7 @@ from crossvals.fractal.fractal import FractalCrossVal
 from crossvals.audiogen.audiogen import AudioGenCrossVal
 from crossvals.llm_defender.llm_defender import LLMDefenderCrossVal
 from crossvals.transcription.transcription import TranscriptionCrossVal
+from crossvals.hivetrain.hivetrain import HivetrainCrossVal
 
 from fastapi import UploadFile, File, HTTPException, Body
 import asyncio
@@ -85,6 +86,11 @@ class TranscriptionItem(BaseModel):
     audio_url: str
     audio_sample: bytes
 
+class HivetrainItem(BaseModel):
+    run_id: str
+    batch_size: int
+    local_gradient: int 
+
 @app.get("/")
 def read_root():
     return translate_crossval.run("Hello, how are you?")
@@ -133,6 +139,10 @@ def llm_defender(item: LLMDefenderItem):
 @app.post("/transcription/")
 def transcription(item: TranscriptionItem):
     return transcription_crossval.run({"type": item.type, "audio_url": item.audio_url, "audio_sample": item.audio_sample})
+
+@app.post("/hivetrain/")
+def hivetrain(item: HivetrainItem):
+    return hivetrain_crossval.run(item)
 
 
 class ImageUpload(BaseModel):
@@ -190,3 +200,4 @@ fractal_crossval = FractalCrossVal()
 audiogen_crossval = AudioGenCrossVal()
 llmdefender_crossval = LLMDefenderCrossVal()
 transcription_crossval = TranscriptionCrossVal()
+hivetrain_crossval = HivetrainCrossVal()
