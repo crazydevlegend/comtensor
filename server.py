@@ -26,6 +26,7 @@ from crossvals.bitagent.bitagent import BitagentCrossVal
 from crossvals.omegalabs.omegalabs import OmegalabsCrossVal
 from crossvals.vision.vision import VisionCrossVal
 from crossvals.omron.omron import OmronCrossVal
+from crossvals.naschain.naschain import NaschainCrossVal
 
 from fastapi import UploadFile, File, HTTPException, Body
 import asyncio
@@ -207,6 +208,10 @@ async def vision(item: VisionItem):
 def omron_func():
     return omron_crossval.run()
 
+@app.post("/naschain", tags=["Mainnet"])
+def naschain():
+    return naschain_crossval.run()
+
 class ImageUpload(BaseModel):
     file: UploadFile = File(...)
 
@@ -272,3 +277,4 @@ omegalabs_crossval = OmegalabsCrossVal(subtensor=subtensor)
 cortex_crossval = CortexCrossVal(subtensor=subtensor)
 vision_crossval = VisionCrossVal(subtensor=subtensor)
 omron_crossval = OmronCrossVal(subtensor=subtensor)
+naschain_crossval = NaschainCrossVal(subtensor=subtensor)
